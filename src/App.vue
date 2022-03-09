@@ -1,16 +1,68 @@
 <template>
   <div class="container">
     <Header title="Užduočių Sekimas" />
+    <AddTask @add-task="addTask" />
+    <Tasks
+      @toggle-reminder="toggleReminder"
+      @delete-task="deleteTask"
+      :tasks="tasks"
+    />
   </div>
 </template>
 
 <script>
 import Header from './components/Header';
+import Tasks from './components/Tasks';
+import AddTask from './components/AddTask';
 
 export default {
   name: 'App',
   components: {
     Header,
+    Tasks,
+    AddTask,
+  },
+  data() {
+    return {
+      tasks: [],
+    };
+  },
+  methods: {
+    addTask(task) {
+      this.tasks = [...this.tasks, task];
+    },
+    deleteTask(id) {
+      if (confirm('Ištrinti?')) {
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      }
+    },
+    toggleReminder(id) {
+      this.tasks = this.tasks.map((task) =>
+        task.id === id ? { ...task, reminder: !task.reminder } : task
+      );
+    },
+  },
+  created() {
+    this.tasks = [
+      {
+        id: 1,
+        text: 'Doctors Appointment',
+        day: 'March 1st at 2:30pm',
+        reminder: true,
+      },
+      {
+        id: 2,
+        text: 'Meeting at School',
+        day: 'March 3rd at 1:30pm',
+        reminder: true,
+      },
+      {
+        id: 3,
+        text: 'Food Shopping',
+        day: 'March 3rd at 11:00pm',
+        reminder: false,
+      },
+    ];
   },
 };
 </script>
